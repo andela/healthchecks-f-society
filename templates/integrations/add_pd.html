@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load compress humanize staticfiles hc_extras %}
+
+{% block title %}Add PagerDuty - healthchecks.io{% endblock %}
+
+
+{% block content %}
+<div class="row">
+<div class="col-sm-12">
+    <h1>PagerDuty</h1>
+
+    <p><a href="https://www.pagerduty.com/">PagerDuty</a> is
+    a well-known incident management system. It provides
+    alerting, on-call scheduling, escalation policies and incident tracking.
+    If you use or plan on using PagerDuty, you can can integrate it
+    with your healthchecks.io account in few simple steps.</p>
+
+    <h2>Setup Guide</h2>
+    <div class="row ai-step">
+        <div class="col-sm-6">
+            <span class="step-no">1</span>
+            <p>
+                Log into your PagerDuty account,
+                go to <strong>Configuration > Services</strong>,
+                and click on <strong>Add New Service</strong>.
+            </p>
+            <p>
+                Give it a descriptive name, and
+                for Integration Type select
+                <strong>Use our API directly</strong>.
+            </p>
+
+        </div>
+        <div class="col-sm-6">
+            <img
+                class="ai-guide-screenshot"
+                alt="Screenshot"
+                src="{% static 'img/integrations/setup_pd_1.png' %}">
+        </div>
+    </div>
+    <div class="row ai-step">
+        <div class="col-sm-6">
+            <span class="step-no">2</span>
+            After adding the new service, take note of its
+            <strong>API key</strong>, a long string
+            of letters and digits.
+
+        </div>
+        <div class="col-sm-6">
+            <img
+                class="ai-guide-screenshot"
+                alt="Screenshot"
+                src="{% static 'img/integrations/setup_pd_2.png' %}">
+        </div>
+    </div>
+
+    <div class="row ai-step">
+        <div class="col-sm-6">
+            <span class="step-no">3</span>
+            <p>Paste the API key down below. Save the integration, and it's done!</p>
+        </div>
+    </div>
+
+    <h2>Integration Settings</h2>
+
+    <form method="post" class="form-horizontal" action="{% url 'hc-add-channel' %}">
+        {% csrf_token %}
+        <input type="hidden" name="kind" value="pd" />
+        <div class="form-group">
+            <label for="api-key" class="col-sm-2 control-label">API Key</label>
+            <div class="col-sm-3">
+                <input
+                    id="api-key"
+                    type="text"
+                    class="form-control"
+                    name="value"
+                    placeholder="">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary">Save Integration</button>
+            </div>
+        </div>
+    </form>
+</div>
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+{% compress js %}
+<script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+{% endcompress %}
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "emails/base.html" %}
+{% block content %}
+
+<h1>Hello,</h1>
+<p>
+    This is a notification sent by <a href="https://healthchecks.io">healthchecks.io</a>.
+    <br />
+    The check <strong>{{ check.name_then_code }}</strong>
+    has gone <strong>{{ check.status|upper }}</strong>.
+</p>
+
+<p>Here is a summary of all your checks:</p>
+
+{% include "emails/summary-html.html" %}
+
+{% if show_upgrade_note %}
+<p><strong>P.S.</strong>
+Find this service useful? Support it by upgrading to
+a <a href="https://healthchecks.io/pricing/">premium account</a>!
+</p>
+{% endif %}
+
+<p>Thanks,<br>The Healthchecks<span>.</span>io Team</p>
+{% endblock %}
