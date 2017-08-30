@@ -36,7 +36,7 @@ in development environment.
 
 * check out project code:
 
-        $ git clone https://github.com/andela/Healthchecks_Asgardians.git
+        $ git clone https://github.com/andela/healthchecks-f-society.git
 
 * install requirements (Django, ...) into virtualenv:
 
