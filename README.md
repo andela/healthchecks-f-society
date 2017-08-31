@@ -1,4 +1,5 @@
 # healthchecks
+[![Build Status](https://travis-ci.org/andela/healthchecks-f-society.svg?branch=develop)](https://travis-ci.org/andela/healthchecks-f-society)
 
 ![Screenshot of Welcome page](/stuff/screenshots/welcome.png?raw=true "Welcome Page")
 
