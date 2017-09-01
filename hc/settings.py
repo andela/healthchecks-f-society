@@ -53,7 +53,6 @@ MIDDLEWARE = (
 
 AUTHENTICATION_BACKENDS = (
     'hc.accounts.backends.EmailBackend',
-    ('django.contrib.auth.backends.ModelBackend'),
     'hc.accounts.backends.ProfileBackend'
 )
 
