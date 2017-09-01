@@ -2,7 +2,6 @@
 [![Build Status](https://travis-ci.org/andela/healthchecks-f-society.svg)](https://travis-ci.org/andela/healthchecks-f-society)
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/bc132943cd8746cba4a19a9e6152ffc6)](https://www.codacy.com/app/clemwek/healthchecks-f-society?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=andela/healthchecks-f-society&amp;utm_campaign=Badge_Grade)
-
 [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/bc132943cd8746cba4a19a9e6152ffc6)](https://www.codacy.com/app/clemwek/healthchecks-f-society?utm_source=github.com&utm_medium=referral&utm_content=andela/healthchecks-f-society&utm_campaign=Badge_Coverage)
 
 ![Screenshot of Welcome page](/stuff/screenshots/welcome.png?raw=true "Welcome Page")
