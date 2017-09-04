@@ -12,7 +12,6 @@ env:
   - DB=sqlite
   - DB=mysql
   - DB=postgres
-  - CODACY_PROJECT_TOKEN=0925482d672041289fc7394e23d02255
 addons:
   postgresql: "9.4"
 script:
