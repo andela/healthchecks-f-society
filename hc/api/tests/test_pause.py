@@ -15,7 +15,7 @@ class PauseTestCase(BaseTestCase):
 
         # Assert the expected status code and check's status
         self.assertEqual(r.status_code, 200)
-        response = json.loads(r.content)
+        response = json.loads(r.content.decode('utf8'))
         self.assertEqual(response['status'], 'paused')
 
     def test_it_validates_ownership(self):
