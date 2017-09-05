@@ -1,5 +1,6 @@
 from hc.api.models import Check
 from hc.test import BaseTestCase
+import json
 
 
 class PauseTestCase(BaseTestCase):
@@ -13,7 +14,9 @@ class PauseTestCase(BaseTestCase):
                              HTTP_X_API_KEY="abc")
 
         # Assert the expected status code and check's status
-        self.assertEqual(r.status_code,200)
+        self.assertEqual(r.status_code, 200)
+        response = json.loads(r.content)
+        self.assertEqual(response['status'], 'paused')
 
     def test_it_validates_ownership(self):
         check = Check(user=self.bob, status="up")
