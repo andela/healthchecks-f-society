@@ -233,3 +233,12 @@ class NotifyTestCase(BaseTestCase):
         self.channel.notify(self.check)
         n = Notification.objects.get()
         self.assertEqual(n.error, "Received status code 500")
+
+    @patch("hc.api.transports.requests.request")
+    def test_webhook_handles_503_connection_error(self,mock_post):
+        self._setup_data("webhook","http://example")
+        mock_post.return_value.status_code=503
+
+        self.channel.notify(self.check)
+        n=Notification.objects.get()
+        self.assertEqual(n.error, "Received status code 503")
