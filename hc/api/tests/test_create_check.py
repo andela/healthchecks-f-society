@@ -1,5 +1,6 @@
 import json
 
+from django.utils.encoding import force_text
 from hc.api.models import Channel, Check
 from hc.test import BaseTestCase
 
@@ -59,7 +60,7 @@ class CreateCheckTestCase(BaseTestCase):
         ### Make the post request with a missing body and get the response
         r = self.client.post(self.URL, content_type='application/json')
 
-        self.assertEqual(json.loads(r.content)['error'], "wrong api_key")
+        self.assertEqual(json.loads(force_text(r.content))['error'], "wrong api_key")
         self.assertEqual(r.status_code, 400)
 
     def test_it_handles_invalid_json(self):
