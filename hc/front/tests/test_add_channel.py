@@ -43,13 +43,18 @@ class AddChannelTestCase(BaseTestCase):
         url = "/integrations/add_%s/" % bad_kind
         r = self.client.get(url)
         self.assertEqual(r.status_code, 404)
-        
-
-    
-
-
-
-
-
+         
     ### Test that the team access works
+    def test_can_add_channel_using_team_access(self):
+        url = "/integrations/add/"
+        form = {"kind": "email", "value": "bob@example.org"}
+
+        # Bob is in alice's team so he should be able to add a channel
+        self.client.login(username="bob@example.org", password="password")
+        r = self.client.post(url, form)
+
+        self.assertRedirects(r, "/integrations/")
+        channel = Channel.objects.get()
+        self.assertEqual(channel.user, self.alice)
+
     ### Test that bad kinds don't work
