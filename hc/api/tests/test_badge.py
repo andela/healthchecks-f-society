@@ -13,12 +13,14 @@ class BadgeTestCase(BaseTestCase):
 
     def test_it_rejects_bad_signature(self):
         r = self.client.get("/badge/%s/12345678/foo.svg" % self.alice.username)
+        assert r.status_code == 400
         ### Assert the expected response status code
 
     def test_it_returns_svg(self):
         sig = base64_hmac(str(self.alice.username), "foo", settings.SECRET_KEY)
         sig = sig[:8].decode("utf-8")
         url = "/badge/%s/%s/foo.svg" % (self.alice.username, sig)
-
         r = self.client.get(url)
+        print(r)
+        self.assertContains(r, "xml")
         ### Assert that the svg is returned
