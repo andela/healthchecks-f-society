@@ -49,4 +49,6 @@ class AddPushoverTestCase(BaseTestCase):
         # set prio to a number greater than 2
         params = "pushover_user_key=a&nonce=n&prio=3"
         r = self.client.get('/integrations/add_pushover/?%s' % params)
-        assert r.status_code == 400
+        self.assertEqual(r.status_code, 400)
+
+    
