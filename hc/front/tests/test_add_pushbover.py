@@ -56,4 +56,41 @@ class AddPushoverTestCase(BaseTestCase):
         r = self.client.get('/integrations/add_pushover/?%s' % params)
         self.assertEqual(r.status_code, 400)
 
+    def test__it_checks_nonce_and_po_nonce_are_equal(self):
+        self.client.login(
+            username='alice@example.org', password='password')
+
+        session = self.client.session
+        session["po_nonce"] = "n"
+        session.save()
+
+        # set nonce to different value from session po_once
+        params = "pushover_user_key=a&nonce=s&prio=0"
+        r = self.client.get("/integrations/add_pushover/?%s" % params)
+        self.assertEqual(r.status_code, 403)
+
+    def test_it_requires_nonce(self):
+        self.client.login(username='alice@example.org', password='password')
+
+        session = self.client.session
+        session["po_nonce"] = "n"
+        session.save()
+
+        # omit nonce in param
+        params = "pushover_user_key=a&prio=0"
+        r = self.client.get("/integrations/add_pushover/?%s" % params)
+        self.assertEqual(r.status_code, 400)
+
+    def test_it_requires_prio(self):
+        self.client.login(username='alice@example.org', password='password')
+
+        session = self.client.session
+        session["po_nonce"] = "n"
+        session.save()
+
+        # omit prio in param
+        params = "pushover_user_key=a&nonce=n"
+        r = self.client.get("/integrations/add_pushover/?%s" % params)
+        assert r.status_code == 400
+
     
