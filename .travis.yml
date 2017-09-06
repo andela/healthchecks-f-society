@@ -2,6 +2,9 @@ language: python
 python:
   - "2.7"
   - "3.4"
+before_install:
+  - sudo apt-get install jq
+  - wget -O ~/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r .assets[0].browser_download_url)
 install:
     - pip install -r requirements.txt
     - pip install braintree coveralls mock mysqlclient
@@ -9,9 +12,13 @@ env:
   - DB=sqlite
   - DB=mysql
   - DB=postgres
+notifications:
+  slack: andela:5r9EjFWvh9TdrLEhk6ViGEU7
 addons:
   postgresql: "9.4"
 script:
   - coverage run --omit=*/tests/* --source=hc manage.py test
-after_success: coveralls
+after_success:
+  - coveralls
+  - java -cp ~/codacy-coverage-reporter-assembly-latest.jar com.codacy.CodacyCoverageReporter -l Java -r build/reports/jacoco/test/jacocoTestReport.xml
 cache: pip
