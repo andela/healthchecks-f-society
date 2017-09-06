@@ -6,7 +6,8 @@ from hc.test import BaseTestCase
 @override_settings(PUSHOVER_API_TOKEN="token", PUSHOVER_SUBSCRIPTION_URL="url")
 class AddPushoverTestCase(BaseTestCase):
     def test_it_adds_channel(self):
-        self.client.login(username="alice@example.org", password="password")
+        self.client.login(
+            username="alice@example.org", password="password")
 
         session = self.client.session
         session["po_nonce"] = "n"
@@ -22,12 +23,15 @@ class AddPushoverTestCase(BaseTestCase):
 
     @override_settings(PUSHOVER_API_TOKEN=None)
     def test_it_requires_api_token(self):
-        self.client.login(username="alice@example.org", password="password")
+        self.client.login(
+            username="alice@example.org",password="password")
+
         r = self.client.get("/integrations/add_pushover/")
         self.assertEqual(r.status_code, 404)
 
     def test_it_validates_nonce(self):
-        self.client.login(username="alice@example.org", password="password")
+        self.client.login(
+            username="alice@example.org", password="password")
 
         session = self.client.session
         session["po_nonce"] = "n"
@@ -40,7 +44,8 @@ class AddPushoverTestCase(BaseTestCase):
     ### Test that pushover validates priority
 
     def test_pushover_validates_priority(self):
-        self.client.login(username='alice@example.org', password='password')
+        self.client.login(
+            username='alice@example.org', password='password')
 
         session = self.client.session
         # set po_once to n
