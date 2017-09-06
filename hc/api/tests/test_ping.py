@@ -75,3 +75,10 @@ class PingTestCase(TestCase):
     # Test that when a ping is made a check with a paused status changes status
     # Test that a post to a ping works
     # Test that the csrf_client head works
+    def test_it_changes_status_of_a_check(self):
+        self.check.status = 'paused'
+        self.check.save()
+        self.client.get("/ping/%s/" % self.check.code)
+        self.check.refresh_from_db()
+
+        self.assertEqual(self.check.status, "up")
