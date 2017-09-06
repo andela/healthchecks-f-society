@@ -51,6 +51,7 @@ class PingTestCase(TestCase):
         ping = Ping.objects.latest("id")
         # Assert the expected response status code and ping's remote address
         self.assertEqual(r.status_code, 200)
+        self.assertEqual(ping.remote_addr, "1.1.1.1")
 
         ip = "1.1.1.1, 2.2.2.2"
         r = self.client.get("/ping/%s/" % self.check.code,
