@@ -1,5 +1,6 @@
 from hc.api.models import Check
 from hc.test import BaseTestCase
+import json
 
 
 class PauseTestCase(BaseTestCase):
@@ -12,7 +13,10 @@ class PauseTestCase(BaseTestCase):
         r = self.client.post(url, "", content_type="application/json",
                              HTTP_X_API_KEY="abc")
 
-        ### Assert the expected status code and check's status
+        # Assert the expected status code and check's status
+        self.assertEqual(r.status_code, 200)
+        response = json.loads(r.content.decode('utf8'))
+        self.assertEqual(response['status'], 'paused')
 
     def test_it_validates_ownership(self):
         check = Check(user=self.bob, status="up")
@@ -24,4 +28,4 @@ class PauseTestCase(BaseTestCase):
 
         self.assertEqual(r.status_code, 400)
 
-        ### Test that it only allows post requests
+        # Test that it only allows post requests
