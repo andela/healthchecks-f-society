@@ -65,6 +65,7 @@ class PingTestCase(TestCase):
                             HTTP_X_FORWARDED_PROTO="https")
         ping = Ping.objects.latest("id")
         # Assert the expected response status code and ping's scheme
+        self.assertEqual(r.status_code, 200)
 
     def test_it_never_caches(self):
         r = self.client.get("/ping/%s/" % self.check.code)
