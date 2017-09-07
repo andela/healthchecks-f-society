@@ -41,8 +41,8 @@ class AddChannelTestCase(BaseTestCase):
         self.client.login(username="alice@example.org", password="password")
         bad_kind = "twitter"
         url = "/integrations/add_%s/" % bad_kind
-        r = self.client.get(url)
-        self.assertEqual(r.status_code, 404)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
          
     ### Test that the team access works
     def test_can_add_channel_using_team_access(self):
@@ -51,9 +51,9 @@ class AddChannelTestCase(BaseTestCase):
 
         # Bob is in alice's team so he should be able to add a channel
         self.client.login(username="bob@example.org", password="password")
-        r = self.client.post(url, form)
+        response = self.client.post(url, form)
 
-        self.assertRedirects(r, "/integrations/")
+        self.assertRedirects(response, "/integrations/")
         channel = Channel.objects.get()
         self.assertEqual(channel.user, self.alice)
 

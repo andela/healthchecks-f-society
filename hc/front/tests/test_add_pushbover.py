@@ -53,7 +53,7 @@ class AddPushoverTestCase(BaseTestCase):
         session.save()
         # set prio to a number greater than 2
         params = "pushover_user_key=a&nonce=n&prio=3"
-        r = self.client.get('/integrations/add_pushover/?%s' % params)
+        response = self.client.get('/integrations/add_pushover/?%s' % params)
         self.assertEqual(r.status_code, 400)
 
     def test__it_checks_nonce_and_po_nonce_are_equal(self):
@@ -66,8 +66,8 @@ class AddPushoverTestCase(BaseTestCase):
 
         # set nonce to different value from session po_once
         params = "pushover_user_key=a&nonce=s&prio=0"
-        r = self.client.get("/integrations/add_pushover/?%s" % params)
-        self.assertEqual(r.status_code, 403)
+        response= self.client.get("/integrations/add_pushover/?%s" % params)
+        self.assertEqual(response.status_code, 403)
 
     def test_it_requires_nonce(self):
         self.client.login(username='alice@example.org', password='password')
@@ -78,8 +78,8 @@ class AddPushoverTestCase(BaseTestCase):
 
         # omit nonce in param
         params = "pushover_user_key=a&prio=0"
-        r = self.client.get("/integrations/add_pushover/?%s" % params)
-        self.assertEqual(r.status_code, 400)
+        response = self.client.get("/integrations/add_pushover/?%s" % params)
+        self.assertEqual(response.status_code, 400)
 
     def test_it_requires_prio(self):
         self.client.login(username='alice@example.org', password='password')
@@ -90,7 +90,7 @@ class AddPushoverTestCase(BaseTestCase):
 
         # omit prio in param
         params = "pushover_user_key=a&nonce=n"
-        r = self.client.get("/integrations/add_pushover/?%s" % params)
-        assert r.status_code == 400
+        response = self.client.get("/integrations/add_pushover/?%s" % params)
+        self.assertEqual(response.status_code, 400)
 
     

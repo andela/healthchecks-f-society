@@ -18,7 +18,7 @@ class AddCheckTestCase(BaseTestCase):
         url = "/checks/add/"
         
         self.client.login(username="charlie@example.org", password="password")
-        r = self.client.post(url)
+        self.client.post(url)
      
         check = Check.objects.get()
         self.assertNotEqual(check.user, self.alice)
