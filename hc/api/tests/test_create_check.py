@@ -98,3 +98,15 @@ class CreateCheckTestCase(BaseTestCase):
             "grace": 60})
         check = Check.objects.get()
         self.assertTrue(check.assign_all_channels)
+
+    ### Test for the 'timeout is too small' and 'timeout is too large' errors
+    def test_timeout_is_too_small(self):
+        r = self.post({
+            "api_key": "abc",
+            "name": "Foo",
+            "tags": "bar,baz",
+            "timeout": 1,
+            "grace": 60})
+        string_content = r.content.decode("utf-8")
+        json_content = json.loads(string_content)
+        self.assertEqual(json_content.get("error"), "timeout is too small")
