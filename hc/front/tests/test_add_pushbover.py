@@ -41,9 +41,9 @@ class AddPushoverTestCase(BaseTestCase):
         r = self.client.get("/integrations/add_pushover/?%s" % params)
         assert r.status_code == 403
 
-    ### Test that pushover validates priority
 
     def test_pushover_validates_priority(self):
+        """Test that pushover validates priority"""
         self.client.login(
             username='alice@example.org', password='password')
 
@@ -54,9 +54,11 @@ class AddPushoverTestCase(BaseTestCase):
         # set prio to a number greater than 2
         params = "pushover_user_key=a&nonce=n&prio=3"
         response = self.client.get('/integrations/add_pushover/?%s' % params)
-        self.assertEqual(r.status_code, 400)
+        self.assertEqual(response.status_code, 400)
+
 
     def test__it_checks_nonce_and_po_nonce_are_equal(self):
+        """Test that check nonce and po_nonce are equal"""
         self.client.login(
             username='alice@example.org', password='password')
 
@@ -66,10 +68,11 @@ class AddPushoverTestCase(BaseTestCase):
 
         # set nonce to different value from session po_once
         params = "pushover_user_key=a&nonce=s&prio=0"
-        response= self.client.get("/integrations/add_pushover/?%s" % params)
+        response = self.client.get("/integrations/add_pushover/?%s" % params)
         self.assertEqual(response.status_code, 403)
 
     def test_it_requires_nonce(self):
+        """Test that integration requires nonce"""
         self.client.login(username='alice@example.org', password='password')
 
         session = self.client.session
@@ -82,6 +85,7 @@ class AddPushoverTestCase(BaseTestCase):
         self.assertEqual(response.status_code, 400)
 
     def test_it_requires_prio(self):
+        """Test that integration requires prio"""
         self.client.login(username='alice@example.org', password='password')
 
         session = self.client.session
@@ -92,5 +96,3 @@ class AddPushoverTestCase(BaseTestCase):
         params = "pushover_user_key=a&nonce=n"
         response = self.client.get("/integrations/add_pushover/?%s" % params)
         self.assertEqual(response.status_code, 400)
-
-    
