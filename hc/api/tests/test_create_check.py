@@ -6,6 +6,7 @@ from hc.test import BaseTestCase
 
 
 class CreateCheckTestCase(BaseTestCase):
+    """Test create chech"""
     URL = "/api/v1/checks/"
 
     def setUp(self):
@@ -18,7 +19,7 @@ class CreateCheckTestCase(BaseTestCase):
         if expected_error:
             self.assertEqual(r.status_code, 400)
             ### Assert that the expected error is the response error
-            self.assertEqual(json.loads(force_text(r.content))['error'], expected_error)
+            self.assertEqual(json.loads(r.content.decode('utf-8'))['error'], expected_error)
 
         return r
 
@@ -65,12 +66,11 @@ class CreateCheckTestCase(BaseTestCase):
         ### Make the post request with a missing body and get the response
         r = self.client.post(self.URL, content_type='application/json')
 
-        self.assertEqual(json.loads(force_text(r.content))['error'], "wrong api_key")
+        self.assertEqual(json.loads(r.content.decode('utf-8'))['error'], "wrong api_key")
         self.assertEqual(r.status_code, 400)
 
     def test_it_handles_invalid_json(self):
         ### Make the post request with invalid json data type
-        r = {'status_code': 400, 'error': "could not parse request body"} ### This is just a placeholder variable
         r = self.client.post(self.URL, ["this is my data"], content_type='application/json')
         self.assertEqual(r.status_code, 400)
         self.assertEqual(json.loads(r.content.decode('utf-8'))['error'], "could not parse request body")
@@ -88,4 +88,13 @@ class CreateCheckTestCase(BaseTestCase):
                   expected_error="name is not a string")
 
     ### Test for the assignment of channels
-    ### Test for the 'timeout is too small' and 'timeout is too large' errors
+    def test_assigns_channels(self):
+        """Tests the assignment works"""
+        r = self.post({
+            "api_key": "abc",
+            "name": "Foo",
+            "tags": "bar,baz",
+            "timeout": 3600,
+            "grace": 60})
+        check = Check.objects.get()
+        self.assertTrue(check.assign_all_channels)
