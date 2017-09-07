@@ -1,5 +1,5 @@
 from django.test import Client, TestCase
-
+from django.middleware.csrf import get_token
 from hc.api.models import Check, Ping
 
 
@@ -87,3 +87,8 @@ class PingTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
     # Test that the csrf_client head works
+    def test_csrf_client_head_works(self):
+        csrf_client = Client(enforce_csrf_checks=True)
+        response = csrf_client.head("/ping/%s/" % self.check.code)
+
+        self.assertEqual(response.status_code, 200)
