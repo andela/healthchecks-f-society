@@ -127,3 +127,12 @@ class ProfileTestCase(BaseTestCase):
         self.assertNotContains(r, "bobs-tag.svg")
 
     ### Test it creates and revokes API key
+    def test_creates_api_key(self):
+        self.client.login(username="alice@example.org", password="password")
+
+        form = {"create_api_key" : True}
+        response = self.client.post("/accounts/profile/", form)
+        assert response.status_code == 200
+
+        print(" >>>>>>   ", response)
+        self.assertContains(response, "The API key has been created!")
