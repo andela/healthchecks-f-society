@@ -45,3 +45,25 @@ class LoginTestCase(TestCase):
 
         ### Any other tests?
 
+    def test_wrong_creditials(self):
+        """
+        Test with wrong creditials.
+        """
+        form = {"email": "alice@example.org", "password":"123"}
+        r = self.client.post("/accounts/login/", form)
+        self.assertContains(r, "Incorrect email or password.")
+
+    def test_correct_creditials_redirect(self):
+        user = User(username="alice", email="alice@example.org")
+        user.set_password("password")
+        user.save()
+
+        # user = User.objects.get(email="alice@example.org")
+        form = {"email": "alice@example.org", "password": "password"}
+        resp = self.client.post("/accounts/login/", form)
+        self.assertRedirects(resp, "/checks/")
+        #import pdb; pdb.set_trace()
+        #self.assertRedirects(r, "/checks/")
+        #self.assertEqual(r.status_code, 200)
+
+
