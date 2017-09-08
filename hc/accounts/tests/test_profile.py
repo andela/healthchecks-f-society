@@ -132,7 +132,7 @@ class ProfileTestCase(BaseTestCase):
 
         form = {"create_api_key" : "1"}
         response = self.client.post("/accounts/profile/", form)
-        assert response.status_code == 200
+        self.assertTrue(response.status_code, 200)
 
         self.assertContains(response, "The API key has been created!")
         self.assertTrue(self.profile.api_key)
@@ -142,10 +142,10 @@ class ProfileTestCase(BaseTestCase):
 
         form = {"create_api_key" : "1"}
         response = self.client.post("/accounts/profile/", form)
-        assert response.status_code == 200
+        self.assertTrue(response.status_code, 200)
 
         form = {"revoke_api_key" : "1"}
         response = self.client.post("/accounts/profile/", form)
-        assert response.status_code == 200
+        self.assertTrue(response.status_code, 200)
 
         self.assertContains(response, "The API key has been revoked!")
