@@ -75,3 +75,4 @@ class ListChecksTestCase(BaseTestCase):
     def test_accepts_api_key(self):
         r = self.client.get("/api/v1/checks/", HTTP_X_API_KEY="abc", content_type="application/json")
         self.assertEqual(r.status_code, 200)
+        self.assertContains(r, "Alice")
