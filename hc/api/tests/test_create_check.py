@@ -9,21 +9,20 @@ class CreateCheckTestCase(BaseTestCase):
     """Test create chech"""
     URL = "/api/v1/checks/"
 
-    def setUp(self):
-        super(CreateCheckTestCase, self).setUp()
-
     def post(self, data, expected_error=None):
+        """Make a post request to /api/v1/checks/"""
         r = self.client.post(self.URL, json.dumps(data),
                              content_type="application/json")
 
         if expected_error:
             self.assertEqual(r.status_code, 400)
-            ### Assert that the expected error is the response error
-            self.assertEqual(json.loads(r.content.decode('utf-8'))['error'], expected_error)
+            self.assertEqual(json.loads(
+                r.content.decode('utf-8'))['error'], expected_error)
 
         return r
 
     def test_it_works(self):
+        """Test create check works"""
         r = self.post({
             "api_key": "abc",
             "name": "Foo",
@@ -39,9 +38,6 @@ class CreateCheckTestCase(BaseTestCase):
         self.assertEqual(doc["name"], "Foo")
         self.assertEqual(doc["tags"], "bar,baz")
 
-        ### Assert the expected last_ping and n_pings values
-
-
         self.assertEqual(Check.objects.count(), 1)
         check = Check.objects.get()
         self.assertEqual(check.name, "Foo")
@@ -50,9 +46,9 @@ class CreateCheckTestCase(BaseTestCase):
         self.assertEqual(check.grace.total_seconds(), 60)
 
     def test_it_accepts_api_key_in_header(self):
+        """Test It accepsts api key in the header"""
         payload = json.dumps({"name": "Foo"})
 
-        ### Make the post request and get the response
         r = self.client.post(
             self.URL,
             payload,
@@ -63,31 +59,36 @@ class CreateCheckTestCase(BaseTestCase):
         self.assertEqual(r.status_code, 201)
 
     def test_it_handles_missing_request_body(self):
-        ### Make the post request with a missing body and get the response
+        """Test it handles missing request body"""
         r = self.client.post(self.URL, content_type='application/json')
 
-        self.assertEqual(json.loads(r.content.decode('utf-8'))['error'], "wrong api_key")
+        self.assertEqual(json.loads(r.content.decode('utf-8'))['error'],
+                         "wrong api_key")
         self.assertEqual(r.status_code, 400)
 
     def test_it_handles_invalid_json(self):
-        ### Make the post request with invalid json data type
-        r = self.client.post(self.URL, ["this is my data"], content_type='application/json')
+        """Test it handles invalid json data type"""
+        r = self.client.post(self.URL, ["this is my data"],
+                             content_type='application/json')
         self.assertEqual(r.status_code, 400)
-        self.assertEqual(json.loads(r.content.decode('utf-8'))['error'], "could not parse request body")
+        self.assertEqual(json.loads(r.content.decode('utf-8'))['error'],
+                         "could not parse request body")
 
     def test_it_rejects_wrong_api_key(self):
+        """Test it rejects wrong API"""
         self.post({"api_key": "wrong"},
                   expected_error="wrong api_key")
 
     def test_it_rejects_non_number_timeout(self):
+        """Test it rejects non number timeout"""
         self.post({"api_key": "abc", "timeout": "oops"},
                   expected_error="timeout is not a number")
 
     def test_it_rejects_non_string_name(self):
+        """Test it regects non string name"""
         self.post({"api_key": "abc", "name": False},
                   expected_error="name is not a string")
 
-    ### Test for the assignment of channels
     def test_assigns_channels(self):
         """Tests the assignment works"""
         r = self.post({
@@ -99,8 +100,8 @@ class CreateCheckTestCase(BaseTestCase):
         check = Check.objects.get()
         self.assertTrue(check.assign_all_channels)
 
-    ### Test for the 'timeout is too small' and 'timeout is too large' errors
     def test_timeout_is_too_small(self):
+        """Test timeout is too small"""
         r = self.post({
             "api_key": "abc",
             "name": "Foo",
