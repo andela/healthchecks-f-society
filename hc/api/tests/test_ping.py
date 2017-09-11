@@ -1,5 +1,4 @@
 from django.test import Client, TestCase
-from django.middleware.csrf import get_token
 from hc.api.models import Check, Ping
 
 
