@@ -24,7 +24,6 @@ class LoginTestCase(TestCase):
         user = User.objects.get(email=form.get('email'))
         self.assertTrue(user)
 
-
         # And email sent
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, 'Log in to healthchecks.io')

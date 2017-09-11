@@ -28,7 +28,7 @@ class CheckTokenTestCase(BaseTestCase):
         response = self.client.post("/accounts/check_token/alice/secret-token/")
         self.assertRedirects(response, "/checks/")
 
-    ### Login with a bad token and check that it redirects
+    ### Login  with a bad token and check that it redirects
     def test_login_with_bad_token_redirects(self):
         response = self.client.post("/accounts/check_token/alice/wrong-token/")
         self.assertRedirects(response, "/accounts/login/")

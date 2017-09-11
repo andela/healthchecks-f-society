@@ -25,6 +25,7 @@ class NotifyTestCase(BaseTestCase):
 
     @patch("hc.api.transports.requests.request")
     def test_webhook(self, mock_get):
+        """Test for webhook"""
         self._setup_data("webhook", "http://example")
         mock_get.return_value.status_code = 200
 
@@ -35,6 +36,7 @@ class NotifyTestCase(BaseTestCase):
 
     @patch("hc.api.transports.requests.request", side_effect=Timeout)
     def test_webhooks_handle_timeouts(self, mock_get):
+        """Test webhooks handles timeout"""
         self._setup_data("webhook", "http://example")
         self.channel.notify(self.check)
 
@@ -43,6 +45,7 @@ class NotifyTestCase(BaseTestCase):
 
     @patch("hc.api.transports.requests.request")
     def test_webhooks_ignore_up_events(self, mock_get):
+        """Test webhook ignore up events"""
         self._setup_data("webhook", "http://example", status="up")
         self.channel.notify(self.check)
 
@@ -51,6 +54,7 @@ class NotifyTestCase(BaseTestCase):
 
     @patch("hc.api.transports.requests.request")
     def test_webhooks_support_variables(self, mock_get):
+        """Test webhook supports variables"""
         template = "http://host/$CODE/$STATUS/$TAG1/$TAG2/?name=$NAME"
         self._setup_data("webhook", template)
         self.check.name = "Hello World"
@@ -84,6 +88,7 @@ class NotifyTestCase(BaseTestCase):
 
     @patch("hc.api.transports.requests.request")
     def test_webhook_fires_on_up_event(self, mock_get):
+        """Test webhook fires on up event"""
         self._setup_data("webhook", "http://foo\nhttp://bar", status="up")
 
         self.channel.notify(self.check)
@@ -93,6 +98,7 @@ class NotifyTestCase(BaseTestCase):
             timeout=5)
 
     def test_email(self):
+        """Test an email is sent"""
         self._setup_data("email", "alice@example.org")
         self.channel.notify(self.check)
 
@@ -103,6 +109,7 @@ class NotifyTestCase(BaseTestCase):
         self.assertEqual(len(mail.outbox), 1)
 
     def test_it_skips_unverified_email(self):
+        """Test it skips unverified emails"""
         self._setup_data("email", "alice@example.org", email_verified=False)
         self.channel.notify(self.check)
 
@@ -113,6 +120,7 @@ class NotifyTestCase(BaseTestCase):
 
     @override_settings(USE_PAYMENTS=True)
     def test_email_contains_upgrade_notice(self):
+        """Test email contains upgrade notice"""
         self._setup_data("email", "alice@example.org", status="up")
         self.profile.team_access_allowed = False
         self.profile.save()
@@ -222,4 +230,32 @@ class NotifyTestCase(BaseTestCase):
         json = kwargs["json"]
         self.assertEqual(json["message_type"], "CRITICAL")
 
-    ### Test that the web hooks handle connection errors and error 500s
+    # Test that the web hooks handle connection errors and error 500s
+    # test handle 500 error codes
+    # test handlr 503 error code
+    @patch("hc.api.transports.requests.request")
+    def test_webhook_handles_500_error(self, mock_post):
+        self._setup_data("webhook", "http://example")
+        mock_post.return_value.status_code = 500
+
+        self.channel.notify(self.check)
+        n = Notification.objects.get()
+        self.assertEqual(n.error, "Received status code 500")
+
+    @patch("hc.api.transports.requests.request")
+    def test_webhook_handles_503_connection_error(self, mock_post):
+        self._setup_data("webhook", "http://example")
+        mock_post.return_value.status_code = 503
+
+        self.channel.notify(self.check)
+        n = Notification.objects.get()
+        self.assertEqual(n.error, "Received status code 503")
+
+    @patch("hc.api.transports.requests.request")
+    def test_webhook_handles_502_error_code(self, mock_post):
+        self._setup_data("webhook", "http://example")
+        mock_post.return_value.status_code = 502
+
+        self.channel.notify(self.check)
+        n = Notification.objects.get()
+        self.assertEqual(n.error, "Received status code 502")
