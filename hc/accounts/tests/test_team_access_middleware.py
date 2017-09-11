@@ -15,3 +15,4 @@ class TeamAccessMiddlewareTestCase(TestCase):
         self.assertEqual(r.status_code, 200)
 
         ### Assert the new Profile objects count
+        self.assertTrue(Profile.objects.all().count(), 1)

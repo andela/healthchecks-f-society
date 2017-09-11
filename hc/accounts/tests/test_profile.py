@@ -18,8 +18,15 @@ class ProfileTestCase(BaseTestCase):
         self.alice.profile.refresh_from_db()
         token = self.alice.profile.token
         ### Assert that the token is set
+        self.assertRedirects(r, "/accounts/set_password_link_sent/")
+        self.assertTrue(self.profile.token)
 
         ### Assert that the email was sent and check email content
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn(mail.outbox[0].subject, "Set password on healthchecks.io")
+        self.assertTrue(
+            "Here's a link to set a password for your account on healthchecks.io"
+            in mail.outbox[0].body)
 
     def test_it_sends_report(self):
         check = Check(name="Test Check", user=self.alice)
@@ -28,6 +35,10 @@ class ProfileTestCase(BaseTestCase):
         self.alice.profile.send_report()
 
         ###Assert that the email was sent and check email content
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn(mail.outbox[0].subject, "Monthly Report")
+        self.assertTrue("This is a monthly report sent by healthchecks.io." in
+                        mail.outbox[0].body)
 
     def test_it_adds_team_member(self):
         self.client.login(username="alice@example.org", password="password")
@@ -41,10 +52,18 @@ class ProfileTestCase(BaseTestCase):
             member_emails.add(member.user.email)
 
         ### Assert the existence of the member emails
-
+        self.assertTrue(member_emails)
+        self.assertTrue(len(member_emails), 2)
         self.assertTrue("frank@example.org" in member_emails)
 
         ###Assert that the email was sent and check email content
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn(
+            mail.outbox[0].subject, "You have been invited to join"\
+             " alice@example.org on healthchecks.io")
+        self.assertTrue(
+            "alice@example.org invites you to their healthchecks.io account." in
+            mail.outbox[0].body)
 
     def test_add_team_member_checks_team_access_allowed_flag(self):
         self.client.login(username="charlie@example.org", password="password")
@@ -108,3 +127,25 @@ class ProfileTestCase(BaseTestCase):
         self.assertNotContains(r, "bobs-tag.svg")
 
     ### Test it creates and revokes API key
+    def test_creates_api_key(self):
+        self.client.login(username="alice@example.org", password="password")
+
+        form = {"create_api_key" : "1"}
+        response = self.client.post("/accounts/profile/", form)
+        self.assertTrue(response.status_code, 200)
+
+        self.assertContains(response, "The API key has been created!")
+        self.assertTrue(self.profile.api_key)
+
+    def test_revokes_api_key(self):
+        self.client.login(username="alice@example.org", password="password")
+
+        form = {"create_api_key" : "1"}
+        response = self.client.post("/accounts/profile/", form)
+        self.assertTrue(response.status_code, 200)
+
+        form = {"revoke_api_key" : "1"}
+        response = self.client.post("/accounts/profile/", form)
+        self.assertTrue(response.status_code, 200)
+
+        self.assertContains(response, "The API key has been revoked!")
