@@ -8,8 +8,9 @@ from hc.api.models import Check
 
 
 class EnsureTriggersTestCase(TestCase):
-
+    """Test for ensure triggers"""
     def test_ensure_triggers(self):
+        """Test ensure triggers"""
         Command().handle()
 
         check = Check.objects.create()
@@ -18,12 +19,11 @@ class EnsureTriggersTestCase(TestCase):
         check.last_ping = timezone.now()
         check.save()
         check.refresh_from_db()
-        assert check.alert_after is not None
-        ### The above assert fails. Make it pass
+        self.assertTrue(check.alert_after is not None)
 
         alert_after = check.alert_after
 
         check.last_ping += timedelta(days=1)
         check.save()
         check.refresh_from_db()
-        ### Assert that alert_after is lesser than the check's alert_after 
+        self.assertGreater(check.alert_after, alert_after)
