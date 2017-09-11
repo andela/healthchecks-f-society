@@ -21,5 +21,5 @@ class BadgeTestCase(BaseTestCase):
         sig = base64_hmac(str(self.alice.username), "foo", settings.SECRET_KEY)
         sig = sig[:8].decode("utf-8")
         url = "/badge/%s/%s/foo.svg" % (self.alice.username, sig)
-        result = self.client.get(url)
-        self.assertContains(result, "xml")
+        response = self.client.get(url)
+        self.assertContains(response, "xml")
