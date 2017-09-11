@@ -4,8 +4,8 @@ __pycache__/
 hc.sqlite
 hc/local_settings.py
 static-collected
-
+htmlcov/
 coverage.xml
-
+hc-venv/
 .DS_Store
 static/.DS_Store

@@ -22,8 +22,7 @@ class LoginTestCase(TestCase):
 
         ### Assert that a user was created
         user = User.objects.get(email=form.get('email'))
-        self.assertEqual(user.email, form.get('email'))
-
+        self.assertTrue(user)
 
         # And email sent
         self.assertEqual(len(mail.outbox), 1)
@@ -58,12 +57,9 @@ class LoginTestCase(TestCase):
         user.set_password("password")
         user.save()
 
-        # user = User.objects.get(email="alice@example.org")
         form = {"email": "alice@example.org", "password": "password"}
         resp = self.client.post("/accounts/login/", form)
         self.assertRedirects(resp, "/checks/")
-        #import pdb; pdb.set_trace()
-        #self.assertRedirects(r, "/checks/")
-        #self.assertEqual(r.status_code, 200)
+        
 
 

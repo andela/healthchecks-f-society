@@ -10,12 +10,12 @@ class CheckTokenTestCase(BaseTestCase):
         self.profile.save()
 
     def test_it_shows_form(self):
-        r = self.client.get("/accounts/check_token/alice/secret-token/")
-        self.assertContains(r, "You are about to log in")
+        response = self.client.get("/accounts/check_token/alice/secret-token/")
+        self.assertContains(response, "You are about to log in")
 
     def test_it_redirects(self):
-        r = self.client.post("/accounts/check_token/alice/secret-token/")
-        self.assertRedirects(r, "/checks/")
+        response = self.client.post("/accounts/check_token/alice/secret-token/")
+        self.assertRedirects(response, "/checks/")
 
         # After login, token should be blank
         self.profile.refresh_from_db()
@@ -25,10 +25,10 @@ class CheckTokenTestCase(BaseTestCase):
     def test_login_redirects_if_already_logged_in(self):
         self.client.post("/accounts/check_token/alice/secret-token/")
 
-        r = self.client.post("/accounts/check_token/alice/secret-token/")
-        self.assertRedirects(r, "/checks/")
+        response = self.client.post("/accounts/check_token/alice/secret-token/")
+        self.assertRedirects(response, "/checks/")
 
-    ### Login with a bad token and check that it redirects
+    ### Login  with a bad token and check that it redirects
     def test_login_with_bad_token_redirects(self):
         response = self.client.post("/accounts/check_token/alice/wrong-token/")
         self.assertRedirects(response, "/accounts/login/")
