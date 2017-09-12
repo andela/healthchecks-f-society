@@ -48,7 +48,7 @@ class Check(models.Model):
     user = models.ForeignKey(User, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     timeout = models.DurationField(default=DEFAULT_TIMEOUT)
-    nag_interval = models.DurationField(default=DEFAULT_NAG_INTERVAL)
+    nag_interval = models.DurationField(default=DEFAULT_NAG)
     last_nag = models.DateTimeField(null=True,blank=True)
     grace = models.DurationField(default=DEFAULT_GRACE)
     n_pings = models.IntegerField(default=0)
