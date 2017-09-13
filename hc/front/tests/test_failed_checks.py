@@ -2,7 +2,7 @@ from hc.api.models import Check
 from hc.test import BaseTestCase
 from datetime import timedelta as td
 from django.utils import timezone
-
+from django.urls import reverse
 
 class MyChecksTestCase(BaseTestCase):
 
@@ -17,7 +17,8 @@ class MyChecksTestCase(BaseTestCase):
         self.check.save()
 
         self.client.login(username="alice@example.org", password="password")
-        response = self.client.get("/failed_checks/")
+        url = reverse('hc-failed-checks')
+        response = self.client.get(url)
 
         # Desktop
         self.assertContains(response, "icon-down")
