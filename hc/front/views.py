@@ -63,8 +63,7 @@ def my_checks(request):
 @login_required
 def failed_checks(request):
     checks = Check.objects.filter(user=request.team.user).order_by("created")
-    counter = Counter()
-    down_tags, grace_tags = set(), set()
+    down_tags = set()
     for check in checks:
         status = check.get_status()
         if status == "down":
@@ -74,7 +73,6 @@ def failed_checks(request):
         "page": "failed_checks",
         "checks": down_tags,
         "now": timezone.now(),
-        
         "ping_endpoint": settings.PING_ENDPOINT
     }
 
