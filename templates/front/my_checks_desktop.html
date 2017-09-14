@@ -5,6 +5,9 @@
         <th class="th-name">Name</th>
         <th>Ping URL</th>
         <th class="th-period">
+            Nag Mode
+        </th>
+        <th class="th-period">
             Period <br />
             <span class="checks-subline">Grace</span>
         </th>
@@ -49,6 +52,15 @@
                 copy
             </button>
         </td>
+
+        <td class="nag-cell">
+            {% if check.nag_mode == 1 %}
+                <span class="status icon-up"></span>
+            {% elif check.nag_mode == 0 %}
+                <span class="status icon-up new"></span>
+            {% endif %}
+        </td>
+
         <td class="timeout-cell">
             <span
                 data-url="{% url 'hc-update-timeout' check.code %}"
