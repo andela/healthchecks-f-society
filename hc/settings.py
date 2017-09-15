@@ -114,7 +114,7 @@ if os.getcwd() == "/app":
     from dj_database_url import parse
     DATABASE_URL = os.getenv("DATABASE_URL")
     DATABASES = {
-        "default": parse(DATABASE_URL, conn_max_age)
+        "default": parse(DATABASE_URL, conn_max_age=600)
     }
 
 LANGUAGE_CODE = 'en-us'
