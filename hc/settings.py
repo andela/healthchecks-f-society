@@ -84,7 +84,7 @@ TEST_RUNNER = 'hc.api.tests.CustomRunner'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME':   './hc.sqlite',
+        'NAME': './hc.sqlite',
     }
 }
 
@@ -93,9 +93,9 @@ DATABASES = {
 if os.environ.get("DB") == "postgres":
     DATABASES = {
         'default': {
-            'ENGINE':   'django.db.backends.postgresql',
-            'NAME':     'hc',
-            'USER':     'postgres',
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'hc',
+            'USER': 'postgres',
             'TEST': {'CHARSET': 'UTF8'}
         }
     }
@@ -104,10 +104,17 @@ if os.environ.get("DB") == "mysql":
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'USER':     'root',
-            'NAME':     'hc',
+            'USER': 'root',
+            'NAME': 'hc',
             'TEST': {'CHARSET': 'UTF8'}
         }
+    }
+
+if os.getcwd() == "/app":
+    from dj_database_url import parse
+    DATABASE_URL = os.getenv("DATABASE_URL")
+    DATABASES = {
+        "default": parse(DATABASE_URL, conn_max_age)
     }
 
 LANGUAGE_CODE = 'en-us'
