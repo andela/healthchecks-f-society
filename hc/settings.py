@@ -21,6 +21,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 DEFAULT_FROM_EMAIL = 'healthchecks@example.org'
 USE_PAYMENTS = False
+SITE_ROOT = "http://localhost:8000"
 
 
 INSTALLED_APPS = (
@@ -111,6 +112,7 @@ if os.environ.get("DB") == "mysql":
     }
 
 if os.getcwd() == "/app":
+    SITE_ROOT = os.get_env("SITE_ROOT")
     from dj_database_url import parse
     DATABASE_URL = os.getenv("DATABASE_URL")
     DATABASES = {
@@ -127,7 +129,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-SITE_ROOT = "http://localhost:8000"
 PING_ENDPOINT = SITE_ROOT + "/ping/"
 PING_EMAIL_DOMAIN = HOST
 STATIC_URL = '/static/'
