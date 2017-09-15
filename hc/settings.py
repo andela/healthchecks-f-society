@@ -112,7 +112,7 @@ if os.environ.get("DB") == "mysql":
     }
 
 if os.getcwd() == "/app":
-    SITE_ROOT = os.get_env("SITE_ROOT")
+    SITE_ROOT = os.getenv("SITE_ROOT")
     from dj_database_url import parse
     DATABASE_URL = os.getenv("DATABASE_URL")
     DATABASES = {
