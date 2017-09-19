@@ -21,6 +21,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 DEFAULT_FROM_EMAIL = 'healthchecks@example.org'
 USE_PAYMENTS = False
+SITE_ROOT = "http://localhost:8000"
 
 
 INSTALLED_APPS = (
@@ -49,6 +50,7 @@ MIDDLEWARE = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'hc.accounts.middleware.TeamAccessMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware'
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -84,7 +86,7 @@ TEST_RUNNER = 'hc.api.tests.CustomRunner'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME':   './hc.sqlite',
+        'NAME': './hc.sqlite',
     }
 }
 
@@ -93,9 +95,9 @@ DATABASES = {
 if os.environ.get("DB") == "postgres":
     DATABASES = {
         'default': {
-            'ENGINE':   'django.db.backends.postgresql',
-            'NAME':     'hc',
-            'USER':     'postgres',
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'hc',
+            'USER': 'postgres',
             'TEST': {'CHARSET': 'UTF8'}
         }
     }
@@ -104,10 +106,18 @@ if os.environ.get("DB") == "mysql":
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'USER':     'root',
-            'NAME':     'hc',
+            'USER': 'root',
+            'NAME': 'hc',
             'TEST': {'CHARSET': 'UTF8'}
         }
+    }
+
+if os.getcwd() == "/app":
+    SITE_ROOT = os.getenv("SITE_ROOT")
+    from dj_database_url import parse
+    DATABASE_URL = os.getenv("DATABASE_URL")
+    DATABASES = {
+        "default": parse(DATABASE_URL, conn_max_age=600)
     }
 
 LANGUAGE_CODE = 'en-us'
@@ -120,7 +130,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-SITE_ROOT = "http://localhost:8000"
 PING_ENDPOINT = SITE_ROOT + "/ping/"
 PING_EMAIL_DOMAIN = HOST
 STATIC_URL = '/static/'
