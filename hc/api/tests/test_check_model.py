@@ -49,3 +49,13 @@ class CheckModelTestCase(TestCase):
 
         check.status = "new"
         self.assertFalse(check.in_grace_period())
+
+    def test_nag_interval_can_be_updated(self):
+        """ Test to check that nag interval can be updated """
+        check = Check()
+        # check that the nag interval defaults to 2 hours
+        self.assertEqual(check.nag_interval, timedelta(hours=2))
+        
+        check.nag_interval = timedelta(minutes=5)
+        self.assertEqual(check.nag_interval, timedelta(minutes=5))
+
