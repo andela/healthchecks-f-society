@@ -12,7 +12,7 @@ from django.core import signing
 from django.http import HttpResponseForbidden, HttpResponseBadRequest
 from django.shortcuts import redirect, render
 from hc.accounts.forms import (EmailPasswordForm, InviteTeamMemberForm,
-                               RemoveTeamMemberForm, ReportSettingsForm,
+                               RemoveTeamMemberForm, PeriodicReportSettingsForm,
                                SetPasswordForm, TeamNameForm)
 from hc.accounts.models import Profile, Member
 from hc.api.models import Channel, Check
@@ -154,7 +154,7 @@ def profile(request):
         elif "show_api_key" in request.POST:
             show_api_key = True
         elif "update_reports_allowed" in request.POST:
-            form = ReportSettingsForm(request.POST)
+            form = PeriodicReportSettingsForm(request.POST)
             if form.is_valid():
                 profile.reports_allowed = form.cleaned_data["reports_allowed"]
                 profile.save()
