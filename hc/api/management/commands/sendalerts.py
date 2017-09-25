@@ -45,6 +45,7 @@ class Command(BaseCommand):
         check.status = check.get_status()
         check.save()
 
+
         tmpl = "\nSending alert, status=%s, code=%s\n"
         self.stdout.write(tmpl % (check.status, check.code))
         errors = check.send_alert()
