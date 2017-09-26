@@ -35,7 +35,7 @@ class Command(BaseCommand):
         report_not_scheduled = Q(next_report_date__isnull=True)
 
         q = Profile.objects.filter(report_due | report_not_scheduled)
-        q = q.filter(reports_allowed=True)
+        q = q.exclude(reports_allowed="")
         q = q.filter(user__date_joined__lt=month_before)
         sent = 0
         for profile in q:

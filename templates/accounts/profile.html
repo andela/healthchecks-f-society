@@ -28,7 +28,7 @@
                     
                     <label>Send me a summary of my checks: 
                         <select class="custom-select mb-2 mr-sm-2 mb-sm-0" name="reports_allowed">
-                            <option {% if profile.reports_allowed == "none" %} selected {% endif %} value="none">Choose...</option>
+                            <option {% if profile.reports_allowed == "" %} selected {% endif %} value="">Choose...</option>
                             <option {% if profile.reports_allowed == "daily" %} selected {% endif %} value="daily">Daily</option>
                             <option {% if profile.reports_allowed == "weekly" %} selected {% endif %} value="weekly">Weekly</option>
                             <option {% if profile.reports_allowed == "monthly" %} selected {% endif %} value="monthly">Monthly</option>
