@@ -23,9 +23,9 @@ class Command(BaseCommand):
         going_up = query.filter(alert_after__gt=now, status="down")
         running_early = query.filter(running_early=True)
         # Don't combine this in one query so Postgres can query using index:
-        checks = list(going_down.iterator())
+        checks = (list(going_down.iterator())
             + list(going_up.iterator())
-            + list(running_early.iterator())
+            + list(running_early.iterator()))
         if not checks:
             return False
 
