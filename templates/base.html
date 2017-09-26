@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="{% static 'css/pricing.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'css/syntax.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'css/channels.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/failed_checks.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'css/channel_checks.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'css/log.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'css/add_pushover.css' %}" type="text/css">
@@ -76,7 +77,9 @@
                     <li {% if page == 'checks' %} class="active" {% endif %}>
                         <a href="{% url 'hc-checks' %}">Checks</a>
                     </li>
-
+                    <li {% if page == 'failed_checks' %} class="active" {% endif %}>
+                        <a href="{% url 'hc-failed-checks' %}">failed-Checks</a>
+                    </li>
                     <li {% if page == 'channels' %} class="active" {% endif %}>
                         <a href="{% url 'hc-channels' %}">Integrations</a>
                     </li>

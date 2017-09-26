@@ -60,6 +60,24 @@ def my_checks(request):
     return render(request, "front/my_checks.html", ctx)
 
 
+@login_required
+def failed_checks(request):
+    checks = Check.objects.filter(user=request.team.user).order_by("created")
+    down_tags = set()
+    for check in checks:
+        status = check.get_status()
+        if status == "down":
+            down_tags.add(check)
+            
+    context= {
+        "page": "failed_checks",
+        "checks": down_tags,
+        "now": timezone.now(),
+        "ping_endpoint": settings.PING_ENDPOINT
+    }
+
+    return render(request, "front/failed_checks.html", context)
+
 def _welcome_check(request):
     check = None
     if "welcome_code" in request.session:
