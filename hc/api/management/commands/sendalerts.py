@@ -47,11 +47,13 @@ class Command(BaseCommand):
         # it won't process this check again.
         check.status = check.get_status()
         check.save()
+
         now = timezone.now()
-        if now < (check.alert_after - (check.reverse_grace + check.grace)):
-            check.running_early = True
-        else:
-            check.running_early = False
+        if check.alert_after:
+            if now < (check.alert_after - (check.reverse_grace + check.grace)):
+                check.running_early = True
+            else:
+                check.running_early = False
         check.save()
 
         tmpl = "\nSending alert, status=%s, code=%s\n"
