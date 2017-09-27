@@ -6,6 +6,9 @@
     This is a notification sent by <a href="https://healthchecks.io">healthchecks.io</a>.
     <br />
     The check <strong>{{ check.name_then_code }}</strong>
+    {% if check.status == "early" %}
+    is running before the timeout period.
+    {% else %}
     has gone <strong>{{ check.status|upper }}</strong>.
 </p>
 
