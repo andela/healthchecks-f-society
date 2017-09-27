@@ -21,7 +21,7 @@ class Command(BaseCommand):
         now = timezone.now()
         going_down = query.filter(alert_after__lt=now, status="up")
         going_up = query.filter(alert_after__gt=now, status="down")
-        running_early = query.filter(running_early=True)
+        running_early = query.filter(status="early")
         # Don't combine this in one query so Postgres can query using index:
         checks = (list(going_down.iterator())
             + list(going_up.iterator())
@@ -46,14 +46,6 @@ class Command(BaseCommand):
         # Save the new status. If sendalerts crashes,
         # it won't process this check again.
         check.status = check.get_status()
-        check.save()
-
-        now = timezone.now()
-        if check.alert_after:
-            if now < (check.alert_after - (check.reverse_grace + check.grace)):
-                check.running_early = True
-            else:
-                check.running_early = False
         check.save()
 
         tmpl = "\nSending alert, status=%s, code=%s\n"
