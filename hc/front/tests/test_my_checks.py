@@ -19,27 +19,28 @@ class MyChecksTestCase(BaseTestCase):
 
     def test_it_shows_green_check(self):
         self.check.last_ping = timezone.now()
+        self.check.timeout =  td(seconds=60)
+        self.check.grace = td(seconds=60)
         self.check.status = "up"
         self.check.save()
 
         self.client.login(username="alice@example.org", password="password")
         r = self.client.get("/checks/")
-
         # Desktop
         self.assertContains(r, "icon-up")
 
         # Mobile
         self.assertContains(r, "label-success")
 
+
     def test_it_shows_red_check(self):
         self.check.last_ping = timezone.now() - td(days=3)
         self.check.status = "up"
         self.check.save()
-
         self.client.login(username="alice@example.org", password="password")
         r = self.client.get("/checks/")
-
         # Desktop
+
         self.assertContains(r, "icon-down")
 
         # Mobile
