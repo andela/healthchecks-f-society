@@ -6,7 +6,7 @@ pipeline {
                 echo 'cloning github repo'
                 checkout scm
                 echo 'Install project requirements'
-                sh 'pip install requirements.txt'
+                sh 'pip install -r requirements.txt'
             }
         }
     }
