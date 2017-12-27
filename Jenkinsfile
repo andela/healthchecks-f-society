@@ -5,8 +5,8 @@ pipeline {
             steps {
                 echo 'cloning github repo'
                 checkout scm
-                echo 'Creating virtual environment'
-                sh 'mkvirtualenv genie'
+                echo 'Install project requirements'
+                sh 'pip install requirements.txt'
             }
         }
     }
