@@ -3,7 +3,10 @@ pipeline {
     stages {
         stage('build') {
             steps {
-                sh 'python --version'
+                echo 'cloning github repo'
+                checkout scm
+                echo 'Creating virtual environment'
+                sh 'mkvirtualenv genie'
             }
         }
     }
